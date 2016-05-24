@@ -2,6 +2,7 @@ python-slackclient
 ================
 
 [![Build Status](https://travis-ci.org/slackhq/python-slackclient.svg?branch=master)](https://travis-ci.org/slackhq/python-slackclient)
+[![Coverage Status](https://coveralls.io/repos/github/slackhq/python-slackclient/badge.svg?branch=master)](https://coveralls.io/github/slackhq/python-slackclient?branch=master)
 
 A basic client for Slack.com, which can optionally connect to the Slack Real Time Messaging (RTM) API.
 
@@ -34,7 +35,6 @@ _Note:_ You must obtain a token for the user/bot. You can find or generate these
 ###Basic API methods
 
 ```python
-import time
 from slackclient import SlackClient
 
 token = "xoxp-28192348123947234198234"      # found at https://api.slack.com/web#authentication
