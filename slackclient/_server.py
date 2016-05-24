@@ -97,6 +97,7 @@ class Server(object):
             self.rtm_connect(reconnect=True)
 
     def ping(self):
+        #acetakwas: The following `return` keyword returns nothing
         return self.send_to_websocket({"type": "ping"})
 
     def websocket_safe_read(self):
@@ -120,6 +121,7 @@ class Server(object):
                 raise
             return data.rstrip()
 
+    #acetakwas: `channel_id` should be `user_id`
     def attach_user(self, name, channel_id, real_name, tz):
         if self.users.find(channel_id) is None:
             self.users.append(User(self, name, channel_id, real_name, tz))
