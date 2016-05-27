@@ -9,9 +9,8 @@ class SearchList(list):
                 if child == name:
                     items.append(child)
 
-        if len(items) == 1:
-            return items[0]
-        elif items:
+        #acetakwas
+        if items:
             return items
         else:
             return None

@@ -25,11 +25,16 @@ class Server(object):
         if connect:
             self.rtm_connect()
 
+    #acetakwas
+    def __nonzero__(self):
+        return self.connected
+
+    #acetakwas
+    __bool__ = __nonzero__
+    
     def __eq__(self, compare_str):
-        if compare_str == self.domain or compare_str == self.token:
-            return True
-        else:
-            return False
+        #acetakwas
+        return compare_str in (self.domain, self.token)
 
     def __str__(self):
         data = ""
@@ -45,6 +50,8 @@ class Server(object):
         if reply.status_code != 200:
             raise SlackConnectionError
         else:
+            #acetakwas
+            self.connected = True
             login_data = reply.json()
             if login_data["ok"]:
                 self.ws_url = login_data['url']
@@ -133,8 +140,15 @@ class Server(object):
             self.channels.append(Channel(self, name, channel_id, members))
 
     def join_channel(self, name):
-        print(self.api_requester.do(self.token,
-                                    "channels.join?name={}".format(name)).text)
+        #acetakwas
+        try:
+            channel = self.channels.find(name).name
+            return self.api_requester.do(
+                self.token,
+                "channels.join?name={}".format(name)
+            ).text
+        except:
+            raise ChannelNotFoundError
 
     def api_call(self, method, **kwargs):
         return self.api_requester.do(self.token, method, kwargs).text
@@ -145,4 +159,9 @@ class SlackConnectionError(Exception):
 
 
 class SlackLoginError(Exception):
+    pass
+
+
+#acetakwas
+class ChannelNotFoundError(Exception):
     pass

@@ -3,7 +3,8 @@
 
 import json
 
-from slackclient._server import Server
+#acetakwas
+from slackclient._server import Server, ChannelNotFoundError
 
 
 class SlackClient(object):
@@ -16,6 +17,8 @@ class SlackClient(object):
             self.server.rtm_connect()
             return True
         except:
+            #acetakwas
+            self.server.connected = False
             return False
 
     def api_call(self, method, **kwargs):
@@ -56,20 +59,25 @@ class SlackClient(object):
             raise SlackNotConnected
 
     def rtm_send_message(self, channel, message):
-        return self.server.channels.find(channel).send_message(message)
+        #acetakwas
+        if self.server:
+            try:
+                return self.server.channels.find(channel).send_message(message)
+            except AttributeError:
+                raise ChannelNotFoundError
 
     def process_changes(self, data):
-        if "type" in data.keys():
+        #acetakwas
+        if "type" in data.keys() and self.server:
             if data["type"] in ('channel_created', 'group_joined'):
                 channel = data["channel"]
                 self.server.attach_channel(channel["name"], channel["id"], [])
-            if data["type"] == 'im_created':
+            elif data["type"] == 'im_created':
                 channel = data["channel"]
                 self.server.attach_channel(channel["user"], channel["id"], [])
-            if data["type"] == "team_join":
+            elif data["type"] == "team_join":
                 user = data["user"]
                 self.server.parse_user_data([user])
-            pass
 
 
 class SlackNotConnected(Exception):
